@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.cm as cmx
 from mpl_toolkits.mplot3d import Axes3D
 import copy
 import graphClasses as gc
@@ -71,7 +72,11 @@ ax = Axes3D(fig)
 ax.set_xlabel('x')
 ax.set_ylabel('y')
 ax.set_title(str(Fraction(sideOfSmallSquares)) + '-Affine Crosswire Graph of Level ' + str(precarpet_level))
-ax.plot_trisurf(x, y, f)
+
+cm = plt.get_cmap('plasma')
+scalarMap = cmx.ScalarMappable(cmap=cm)
+
+ax.scatter(x, y, f, c=scalarMap.to_rgba(f))
 ax.view_init(azim=224)
 
 # save and show plot
