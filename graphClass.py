@@ -42,17 +42,19 @@ class Graph:
 
     def contract_graph_affine(self, scaleX, scaleY, fixedPoint):
         for v in self.vertices:
-            # contract the x value, then the y value
-            self.vertices[v][1][0] = scaleX * (self.vertices[v][1][0] - fixedPoint[0]) + fixedPoint[0]
-            self.vertices[v][1][1] = scaleY * (self.vertices[v][1][1] - fixedPoint[1]) + fixedPoint[1]
+            print(type(self.vertices[v][1].item(0)), type(fixedPoint.item(0)))
+            self.vertices[v][1][0] = (self.vertices[v][1].item(0) - fixedPoint.item(0)) * scaleX + fixedPoint.item(0)
+            self.vertices[v][1][1] = (self.vertices[v][1].item(1) - fixedPoint.item(0)) * scaleY + fixedPoint.item(1)
 
-    def combine_vertices(self, u, v):
-        for n in self.vertices[v][0]:
-            self.vertices[u][0].append(n)
-            for neigh in self.vertices[v][0]:
-                self.vertices[neigh][0].remove(v)
-                self.vertices[neigh][0].append(u)
-        self.vertices.pop(v)
+    def combine_vertices(self, listOfVerts):
+        keptPoint = listOfVerts[0]
+        listOfVerts.remove(listOfVerts[0])
+        for v in listOfVerts:
+            self.vertices[keptPoint][0].extend(self.vertices[v][0])
+            for n in self.vertices[v][0]:
+                self.vertices[n][0].remove(v)
+                self.vertices[n][0].append(keptPoint)
+            self.vertices.pop(v)
 
     def update_all_vertices_names(self, update):
         self.vertices = {key + update: value for key, value in self.vertices.items()}
@@ -67,15 +69,19 @@ class Graph:
     def remove_redundancies(self):
         # combines any points with the same position
         dictOfPositions = {}
-        listOfDuplicates = []
+        dictOfDuplicatePositions = {}
         for v in self.vertices:
             posV = tuple(np.round(self.vertices[v][1], 10))
             if posV in dictOfPositions:
-                listOfDuplicates.append([v, dictOfPositions[posV]])
+                if posV in dictOfDuplicatePositions:
+                    dictOfDuplicatePositions[posV].append(v)
+                else:
+                    dictOfDuplicatePositions[posV] = [dictOfPositions[posV], v]
             else:
                 dictOfPositions[posV] = v
-        for pair in listOfDuplicates:
-            self.combine_vertices(pair[0], pair[1])
+        print(dictOfDuplicatePositions)
+        for key in dictOfDuplicatePositions:
+            self.combine_vertices(dictOfDuplicatePositions[key])
 
     def apply_harmonic_function(self, numRuns=500):
         for v in self.vertices:
@@ -89,7 +95,6 @@ class Graph:
                     self.vertices[u][2] = np.mean(listOfHarmonicValues)
 
     def apply_harmonic_function_affine(self, numRuns=500):
-        starttime = time.time()
         for v in self.vertices:
             self.vertices[v][2] = self.vertices[v][1][0]  # starts with the function f(x, y) = x
         for i in range(numRuns):

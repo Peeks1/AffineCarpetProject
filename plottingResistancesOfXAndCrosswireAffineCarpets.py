@@ -13,6 +13,7 @@ sideOfCenterHole = 1/2
 # the above two are the only parameters, since sideOfCenterHole + 2*sideOfSmallSquares = 1 must be true
 sideOfSmallSquares = (1 - sideOfCenterHole) / 2
 
+# CODE FOR THE CROSSWIRE
 # building the level 0 cross carpet
 aC0 = gc.Graph()
 aC0.add_vertex("a", np.array([0, 0.5]))
@@ -42,9 +43,9 @@ listOfContractionParameters = [[sideOfSmallSquares, sideOfSmallSquares, np.array
                                [sideOfSmallSquares, sideOfCenterHole, np.array([0, 0.5])]]  # q7
 # variables for plotting
 countingList = []
-listOfResistances = []
+listOfCrossResistances = []
 
-# making carpets and storing their resistances
+# making crosswire carpets and storing their resistances
 for k in range(precarpet_level):
     print("making level", k + 1)
     countingList.append(k + 1)
@@ -58,25 +59,71 @@ for k in range(precarpet_level):
         aCn_plus_one.add_graph(copyOfACn)
     aCn_plus_one.remove_redundancies()
     aCn_plus_one.apply_harmonic_function_affine()
-    listOfResistances.append(aCn_plus_one.resistance_of_graph())
-print("done constructing")
+    listOfCrossResistances.append(aCn_plus_one.resistance_of_graph())
+print("done constructing crosswire")
 
-# placing plot points
-plt.plot(countingList, listOfResistances, "bo")
-coefficients = np.polyfit(countingList, listOfResistances, 2)
-linearization = np.poly1d(coefficients)
-plt.plot(countingList, linearization(countingList), "r--")
+# CODE FOR THE X CARPET
+# building the level 0 X carpet
+aX0 = gc.Graph()
+aX0.add_vertex("a", np.array([0, 0]))
+aX0.add_vertex("b", np.array([0, 1]))
+aX0.add_vertex("c", np.array([1, 1]))
+aX0.add_vertex("d", np.array([1, 0]))
+aX0.add_vertex("e", np.array([0.5, 0.5]))
+aX0.add_edge("a", "e")
+aX0.add_edge('b', 'e')
+aX0.add_edge('c', 'e')
+aX0.add_edge('d', 'e')
+
+# variables needed for the for loop that builds the precarpet
+aXn = gc.Graph()
+aXn_plus_one = aX0
+copyOfAXn = gc.Graph()
+
+# storing resistance of X
+listOfXResistances = []
+
+# making carpets and storing their resistances
+for k in range(precarpet_level):
+    print("making level", k + 1)
+    aXn = copy.deepcopy(aXn_plus_one)
+    aXn_plus_one = gc.Graph()
+    for i in range(0, 8):
+        copyOfAXn = copy.deepcopy(aXn)
+        copyOfAXn.update_all_vertices_names(str(i))
+        copyOfAXn.contract_graph_affine(listOfContractionParameters[i][0], listOfContractionParameters[i][1],
+                                        listOfContractionParameters[i][2])
+        aXn_plus_one.add_graph(copyOfAXn)
+    aXn_plus_one.remove_redundancies()
+    aXn_plus_one.apply_harmonic_function_affine()
+    listOfXResistances.append(aXn_plus_one.resistance_of_graph())
+aXn_plus_one.print_vertices_x_y_f()
+print("done constructing X")
+
+# placing plot points for cross
+plt.plot(countingList, listOfCrossResistances, "bo")
+coefficientsCross = np.polyfit(countingList, listOfCrossResistances, 2)
+linearizationCross = np.poly1d(coefficientsCross)
+plt.plot(countingList, linearizationCross(countingList), "r--")
+
+# placing plot points for X
+plt.plot(countingList, listOfXResistances, "ro")
+coefficientsX = np.polyfit(countingList, listOfXResistances, 2)
+linearizationX = np.poly1d(coefficientsX)
+plt.plot(countingList, linearizationX(countingList), "b--")
 
 # adding text to plot
-plt.title("Resistances of the " + str(Fraction(sideOfSmallSquares)) + "-Affine Crosswire Graph")
+plt.title("Resistances of the " + str(Fraction(sideOfSmallSquares)) + "-Affine Crosswire and X Graphs")
 plt.xlabel("Fractal Level")
 plt.ylabel("Resistance of Graph")
 plt.xticks(list(range(0, precarpet_level + 2)))
 plt.yticks(list(range(0, precarpet_level + 3)))
-for r in listOfResistances:
-    plt.text(listOfResistances.index(r) + 1 - .1, r + .1, r.__round__(3))
+for r in listOfCrossResistances:
+    plt.text(listOfCrossResistances.index(r) + 1 - .1, r + .1, r.__round__(3))
+for r in listOfXResistances:
+    plt.text(listOfXResistances.index(r) + 1 - .1, r + .1, r.__round__(3))
 
 # save and show plot
-plt.savefig(str(sideOfSmallSquares) + "affineCrosswireResistanceToLevel" + str(precarpet_level) + ".pdf")
+plt.savefig(str(sideOfSmallSquares) + "affineXAndCrosswireResistanceToLevel" + str(precarpet_level) + ".pdf")
 plt.show()
 

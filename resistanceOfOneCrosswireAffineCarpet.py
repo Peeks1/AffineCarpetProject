@@ -1,5 +1,5 @@
 import numpy as np
-import graphClasses as gc
+import graphClass as gc
 import copy
 
 #  INPUT HERE
@@ -50,7 +50,7 @@ for k in range(precarpet_level):
         aCn_plus_one.add_graph(copyOfACn)
     aCn_plus_one.remove_redundancies()
 
-# code for calculating rho
+'''# code for calculating rho
 aCn = copy.deepcopy(aCn_plus_one)
 aCn_plus_two = gc.Graph()
 for i in range(0, 8):
@@ -60,14 +60,14 @@ for i in range(0, 8):
                                     listOfContractionParameters[i][2])
     aCn_plus_two.add_graph(copyOfACn)
 aCn_plus_two.remove_redundancies()
-print("done constructing")
+print("done constructing")'''
 
 aCn_plus_one.apply_harmonic_function_affine()
 # aCn_plus_one.print_graph()
 # aCn_plus_one.print_vertices_x_y_f()
 print("Resistance of the graph n is", aCn_plus_one.resistance_of_graph())
 
-# more rho code
+'''# more rho code
 aCn_plus_two.apply_harmonic_function_affine()
 print("Resistance of the graph n+1 is", aCn_plus_two.resistance_of_graph())
-print("Rho is", aCn_plus_two.resistance_of_graph()/aCn_plus_one.resistance_of_graph())
+print("Rho is", aCn_plus_two.resistance_of_graph()/aCn_plus_one.resistance_of_graph())'''

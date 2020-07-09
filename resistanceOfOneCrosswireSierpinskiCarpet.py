@@ -1,5 +1,5 @@
 import numpy as np
-import graphClasses as gc
+import graphClass as gc
 import copy
 
 #  INPUT HERE what level precarpet would you like?
