@@ -7,20 +7,33 @@ from fractions import Fraction
 #  INPUT HERE
 # what level affine carpet would you like:
 precarpet_level = 2
+# would you like a cross or X-graph (input "+" or "x")
+kindOfGraph = "+"
 # how large would you like the center hole to be:
 sideOfCenterHole = 1/2
-
 
 # the above two are the only parameters, since sideOfCenterHole + 2*sideOfSmallSquares = 1 must be true
 sideOfSmallSquares = (1 - sideOfCenterHole) / 2
 
-# building the level 0 cross carpet
+# building the level 0 carpet
 aC0 = gc.Graph()
-aC0.add_vertex("a", np.array([0, 0.5]))
-aC0.add_vertex("b", np.array([0.5, 1]))
-aC0.add_vertex("c", np.array([1, 0.5]))
-aC0.add_vertex("d", np.array([0.5, 0]))
-aC0.add_vertex("e", np.array([0.5, 0.5]))
+
+if kindOfGraph == "+":
+    aC0.add_vertex("a", np.array([0, 0.5]))
+    aC0.add_vertex("b", np.array([0.5, 1]))
+    aC0.add_vertex("c", np.array([1, 0.5]))
+    aC0.add_vertex("d", np.array([0.5, 0]))
+    aC0.add_vertex("e", np.array([0.5, 0.5]))
+elif kindOfGraph == "x":
+    aC0.add_vertex("a", np.array([0, 0]))
+    aC0.add_vertex("b", np.array([0, 1]))
+    aC0.add_vertex("c", np.array([1, 1]))
+    aC0.add_vertex("d", np.array([1, 0]))
+    aC0.add_vertex("e", np.array([0.5, 0.5]))
+else:
+    print("You need to input '+' or 'x' for kindOfGraph")
+    exit()
+
 aC0.add_edge("a", "e")
 aC0.add_edge('b', 'e')
 aC0.add_edge('c', 'e')
@@ -80,4 +93,3 @@ for r in listOfResistances:
 # save and show plot
 plt.savefig(str(sideOfSmallSquares) + "affineCrosswireResistanceToLevel" + str(precarpet_level) + ".pdf")
 plt.show()
-

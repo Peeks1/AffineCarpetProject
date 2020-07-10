@@ -41,10 +41,9 @@ class Graph:
             self.vertices[v][1] = scale * (self.vertices[v][1] - fixedPoint) + fixedPoint
 
     def contract_graph_affine(self, scaleX, scaleY, fixedPoint):
+        scaleMatrix = np.array([scaleX, scaleY])
         for v in self.vertices:
-            print(type(self.vertices[v][1].item(0)), type(fixedPoint.item(0)))
-            self.vertices[v][1][0] = (self.vertices[v][1].item(0) - fixedPoint.item(0)) * scaleX + fixedPoint.item(0)
-            self.vertices[v][1][1] = (self.vertices[v][1].item(1) - fixedPoint.item(0)) * scaleY + fixedPoint.item(1)
+            self.vertices[v][1] = np.multiply((self.vertices[v][1] - fixedPoint), scaleMatrix) + fixedPoint
 
     def combine_vertices(self, listOfVerts):
         keptPoint = listOfVerts[0]
@@ -79,7 +78,6 @@ class Graph:
                     dictOfDuplicatePositions[posV] = [dictOfPositions[posV], v]
             else:
                 dictOfPositions[posV] = v
-        print(dictOfDuplicatePositions)
         for key in dictOfDuplicatePositions:
             self.combine_vertices(dictOfDuplicatePositions[key])
 
