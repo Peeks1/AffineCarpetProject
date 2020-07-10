@@ -102,13 +102,13 @@ print("done constructing X")
 
 # placing plot points for cross
 crossLegend, = plt.plot(countingList, listOfCrossResistances, "bo", label='Crosswire Graph Resistance')
-coefficientsCross = np.polyfit(countingList, listOfCrossResistances, 2)
+coefficientsCross = np.polyfit(countingList, listOfCrossResistances, 1)
 linearizationCross = np.poly1d(coefficientsCross)
 plt.plot(countingList, linearizationCross(countingList), "b--")
 
 # placing plot points for X
 xLegend, = plt.plot(countingList, listOfXResistances, "ro", label='X Graph Resistance')
-coefficientsX = np.polyfit(countingList, listOfXResistances, 2)
+coefficientsX = np.polyfit(countingList, listOfXResistances, 1)
 linearizationX = np.poly1d(coefficientsX)
 plt.plot(countingList, linearizationX(countingList), "r--")
 

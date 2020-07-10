@@ -81,20 +81,9 @@ class Graph:
         for key in dictOfDuplicatePositions:
             self.combine_vertices(dictOfDuplicatePositions[key])
 
-    def apply_harmonic_function(self, numRuns=500):
+    def apply_harmonic_function_affine(self, stretchFactor=1, numRuns=500):
         for v in self.vertices:
-            self.vertices[v][2] = self.vertices[v][1][0]  # starts with the function f(x, y) = x
-        for i in range(numRuns):
-            for u in self.vertices:
-                if not (self.vertices[u][2] == 0 or self.vertices[u][2] == 1):
-                    listOfHarmonicValues = []
-                    for n in self.vertices[u][0]:
-                        listOfHarmonicValues.append(self.vertices[n][2])
-                    self.vertices[u][2] = np.mean(listOfHarmonicValues)
-
-    def apply_harmonic_function_affine(self, numRuns=500):
-        for v in self.vertices:
-            self.vertices[v][2] = self.vertices[v][1][0]  # starts with the function f(x, y) = x
+            self.vertices[v][2] = self.vertices[v][1][0]/stretchFactor  # starts with the function f(x, y) = x/stretch
         for i in range(numRuns):
             for u in self.vertices:
                 if not (self.vertices[u][2] == 0 or self.vertices[u][2] == 1):

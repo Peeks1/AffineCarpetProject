@@ -64,7 +64,7 @@ print("done constructing")
 
 # placing plot points
 plt.plot(countingList, listOfResistances, "bo")
-coefficients = np.polyfit(countingList, listOfResistances, 2)
+coefficients = np.polyfit(countingList, listOfResistances, 1)
 linearization = np.poly1d(coefficients)
 plt.plot(countingList, linearization(countingList), "r--")
 
