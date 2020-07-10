@@ -6,7 +6,7 @@ from fractions import Fraction
 
 #  INPUT HERE
 # what level affine carpet would you like:
-precarpet_level = 3
+precarpet_level = 2
 # how large would you like the center hole to be:
 sideOfCenterHole = 1/2
 
@@ -101,16 +101,16 @@ aXn_plus_one.print_vertices_x_y_f()
 print("done constructing X")
 
 # placing plot points for cross
-plt.plot(countingList, listOfCrossResistances, "bo")
+crossLegend, = plt.plot(countingList, listOfCrossResistances, "bo", label='Crosswire Graph Resistance')
 coefficientsCross = np.polyfit(countingList, listOfCrossResistances, 2)
 linearizationCross = np.poly1d(coefficientsCross)
-plt.plot(countingList, linearizationCross(countingList), "r--")
+plt.plot(countingList, linearizationCross(countingList), "b--")
 
 # placing plot points for X
-plt.plot(countingList, listOfXResistances, "ro")
+xLegend, = plt.plot(countingList, listOfXResistances, "ro", label='X Graph Resistance')
 coefficientsX = np.polyfit(countingList, listOfXResistances, 2)
 linearizationX = np.poly1d(coefficientsX)
-plt.plot(countingList, linearizationX(countingList), "b--")
+plt.plot(countingList, linearizationX(countingList), "r--")
 
 # adding text to plot
 plt.title("Resistances of the " + str(Fraction(sideOfSmallSquares)) + "-Affine Crosswire and X Graphs")
@@ -118,6 +118,7 @@ plt.xlabel("Fractal Level")
 plt.ylabel("Resistance of Graph")
 plt.xticks(list(range(0, precarpet_level + 2)))
 plt.yticks(list(range(0, precarpet_level + 3)))
+plt.legend(handles=[crossLegend, xLegend])
 for r in listOfCrossResistances:
     plt.text(listOfCrossResistances.index(r) + 1 - .1, r + .1, r.__round__(3))
 for r in listOfXResistances:
