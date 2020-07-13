@@ -1,12 +1,14 @@
 import numpy as np
 import graphClass as gc
 import copy
+import time
 
+starttime = time.time()
 #  INPUT HERE
 # what level affine carpet would you like:
-precarpet_level = 2
+precarpet_level = 5
 # how large would you like the center hole to be:
-sideOfSmallSquares = 1/3
+sideOfSmallSquares = .1
 
 # this is the only parameter, since sideOfCenterHole + 2*sideOfSmallSquares = 1 must be true
 sideOfCenterHole = 1 - sideOfSmallSquares * 2
@@ -61,14 +63,17 @@ for i in range(0, 8):
                                     listOfContractionParameters[i][2])
     aCn_plus_two.add_graph(copyOfACn)
 aCn_plus_two.remove_redundancies()
-print("done constructing")
+print("done constructing precarpets")
+print("Time since start", time.time() - starttime)
 
 aCn_plus_one.apply_harmonic_function_affine()
 # aCn_plus_one.print_graph()
 # aCn_plus_one.print_vertices_x_y_f()
 print("Resistance of the graph", precarpet_level, "is", aCn_plus_one.resistance_of_graph())
+print("Time since start", time.time() - starttime)
 
 # more rho code
 aCn_plus_two.apply_harmonic_function_affine()
 print("Resistance of the graph", precarpet_level + 1,  "is", aCn_plus_two.resistance_of_graph())
 print("Rho is", aCn_plus_two.resistance_of_graph()/aCn_plus_one.resistance_of_graph())
+print("Time since start", time.time() - starttime)
