@@ -2,24 +2,41 @@ import numpy as np
 import graphClass as gc
 import copy
 import time
+import matplotlib.pyplot as plt
+import matplotlib.cm as cmx
+from mpl_toolkits.mplot3d import Axes3D
 
 starttime = time.time()
 #  INPUT HERE
 # what level affine carpet would you like:
-precarpet_level = 5
+precarpet_level = 3
 # how large would you like the center hole to be:
 sideOfSmallSquares = .1
+# would you like a cross or X-graph (input "+" or "x"):
+kindOfGraph = "+"
 
 # this is the only parameter, since sideOfCenterHole + 2*sideOfSmallSquares = 1 must be true
 sideOfCenterHole = 1 - sideOfSmallSquares * 2
 
 # building the level 0 cross carpet
 aC0 = gc.Graph()
-aC0.add_vertex("a", np.array([0, 0.5]))
-aC0.add_vertex("b", np.array([0.5, 1]))
-aC0.add_vertex("c", np.array([1, 0.5]))
-aC0.add_vertex("d", np.array([0.5, 0]))
-aC0.add_vertex("e", np.array([0.5, 0.5]))
+
+if kindOfGraph == "+":
+    aC0.add_vertex("a", np.array([0, 0.5]))
+    aC0.add_vertex("b", np.array([0.5, 1]))
+    aC0.add_vertex("c", np.array([1, 0.5]))
+    aC0.add_vertex("d", np.array([0.5, 0]))
+    aC0.add_vertex("e", np.array([0.5, 0.5]))
+elif kindOfGraph == "x":
+    aC0.add_vertex("a", np.array([0, 0]))
+    aC0.add_vertex("b", np.array([0, 1]))
+    aC0.add_vertex("c", np.array([1, 1]))
+    aC0.add_vertex("d", np.array([1, 0]))
+    aC0.add_vertex("e", np.array([0.5, 0.5]))
+else:
+    print("You need to input '+' or 'x' for kindOfGraph")
+    exit()
+
 aC0.add_edge("a", "e")
 aC0.add_edge('b', 'e')
 aC0.add_edge('c', 'e')
@@ -54,6 +71,7 @@ for k in range(precarpet_level):
     aCn_plus_one.remove_redundancies()
 
 # code for calculating rho
+print("making level", precarpet_level + 1)
 aCn = copy.deepcopy(aCn_plus_one)
 aCn_plus_two = gc.Graph()
 for i in range(0, 8):
@@ -77,3 +95,35 @@ aCn_plus_two.apply_harmonic_function_affine()
 print("Resistance of the graph", precarpet_level + 1,  "is", aCn_plus_two.resistance_of_graph())
 print("Rho is", aCn_plus_two.resistance_of_graph()/aCn_plus_one.resistance_of_graph())
 print("Time since start", time.time() - starttime)
+
+# plotting
+x = []
+y = []
+f = []
+for v in aCn_plus_two.vertices:
+    x.append(aCn_plus_two.vertices[v][1][0])
+    y.append(aCn_plus_two.vertices[v][1][1])
+    f.append(aCn_plus_two.vertices[v][2])
+
+fig = plt.figure()
+ax = Axes3D(fig)
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+
+cm = plt.get_cmap('plasma')
+scalarMap = cmx.ScalarMappable(cmap=cm)
+
+ax.scatter(x, y, f, c=scalarMap.to_rgba(f))
+ax.view_init(azim=224)
+
+if kindOfGraph == '+':
+    plt.title("Harmonic Function On Level " + str(precarpet_level + 1) + " " + str(sideOfSmallSquares.__round__(3)) +
+              "-Affine Crosswire Graph")
+    plt.savefig(str(sideOfSmallSquares.__round__(3)) + "affineCrosswireHarmonicOnLevel" + str(precarpet_level + 1) +
+                ".pdf")
+elif kindOfGraph == 'x':
+    plt.title("Harmonic Function On Level " + str(precarpet_level + 1) + " " + str(sideOfSmallSquares.__round__(3)) +
+              "-Affine X Graph")
+    plt.savefig(str(sideOfSmallSquares.__round__(3)) + "affineXHarmonicOnLevel" + str(precarpet_level + 1) + ".pdf")
+
+plt.show()

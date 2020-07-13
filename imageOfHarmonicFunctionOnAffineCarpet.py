@@ -95,12 +95,12 @@ ax.view_init(azim=224)
 
 # parts that depend on if + or x
 if kindOfGraph == '+':
-    plt.title("Harmonic Function On Level " + str(precarpet_level) + " " + str(Fraction(sideOfSmallSquares)) +
+    plt.title("Harmonic Function On Level " + str(precarpet_level) + " " + str(sideOfSmallSquares.__round__(3)) +
               "-Affine Crosswire Graph")
     plt.savefig(str(sideOfSmallSquares) + "affineCrosswireHarmonicOnLevel" + str(precarpet_level) + ".pdf")
 elif kindOfGraph == 'x':
-    plt.title("Harmonic Function On Level " + str(precarpet_level) + " " + str(Fraction(sideOfSmallSquares)) +
+    plt.title("Harmonic Function On Level " + str(precarpet_level) + " " + str(sideOfSmallSquares.__round__(3)) +
               "-Affine X Graph")
-    plt.savefig(str(sideOfSmallSquares) + "affineXHarmonicOnLevel" + str(precarpet_level) + ".pdf")
+    plt.savefig(str(sideOfSmallSquares.__round__(3)) + "affineXHarmonicOnLevel" + str(precarpet_level) + ".pdf")
 
 plt.show()
