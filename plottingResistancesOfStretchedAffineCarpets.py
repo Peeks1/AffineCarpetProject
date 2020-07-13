@@ -2,20 +2,18 @@ import matplotlib.pyplot as plt
 import copy
 import graphClass as gc
 import numpy as np
-from fractions import Fraction
 
 #  INPUT HERE
 # what level affine carpet would you like:
-precarpet_level = 2
+precarpet_level = 4
 # would you like a cross or X-graph (input "+" or "x"):
 kindOfGraph = "+"
 # how large would you like the center hole to be:
 sideOfCenterHole = 1/2
-# what range of n's would you like to analyze (input should be [smallestn, largestn]
-rangeOfn = [1, 5]
-# how much larger would you like each successive n to be:
-increase = 1
-# (ex: if you wanted to analyze the carpets 1x1, 1x1.5, 1x2, you should input rangeOfn = [1, 2] and increase = .5
+# what n's would you like to analyze (where the carpets analyzed are 1xn and the distance between the boundary points
+# is n
+nValues = [2, 3, 6, 1/2]
+nValues.sort()
 
 # the above two are the only parameters, since sideOfCenterHole + 2*sideOfSmallSquares = 1 must be true
 sideOfSmallSquares = (1 - sideOfCenterHole) / 2
@@ -77,18 +75,29 @@ for k in range(precarpet_level):
     aCn_plus_one.remove_redundancies()
 print("done constructing")
 
-j = rangeOfn[0]
-stretchedACn = gc.Graph()
-# calculating the resistance of the 1xn carpets
-while j <= rangeOfn[1]:
-    print("calculating resistance of 1x" + str(j))
-    countingList.append(j)
+'''# calculating the resistance of the 1xn carpets
+for n in nValues:
+    print("calculating resistance of 1x" + str(n))
+    countingList.append(n.__round__(3))
     stretchedACn = copy.deepcopy(aCn_plus_one)
     for v in stretchedACn.vertices:
-        stretchedACn.vertices[v][1] = np.multiply(stretchedACn.vertices[v][1], [j, 1])
-    stretchedACn.apply_harmonic_function_affine(stretchFactor=j)
-    listOfResistances.append(stretchedACn.resistance_of_graph())
-    j += increase
+        stretchedACn.vertices[v][1] = np.multiply(stretchedACn.vertices[v][1], [n, 1])
+    stretchedACn.apply_harmonic_function_affine(stretchFactor=n)
+    listOfResistances.append(stretchedACn.resistance_of_graph())'''
+
+# calculating rho of the 1xn carpets
+for n in nValues:
+    print("calculating rho of 1x" + str(n))
+    countingList.append(n.__round__(3))
+    stretchedACn = copy.deepcopy(aCn)
+    stretchedACn_plus_one = copy.deepcopy(aCn_plus_one)
+    for v in stretchedACn.vertices:
+        stretchedACn.vertices[v][1] = np.multiply(stretchedACn.vertices[v][1], [n, 1])
+    for v in stretchedACn_plus_one.vertices:
+        stretchedACn_plus_one.vertices[v][1] = np.multiply(stretchedACn_plus_one.vertices[v][1], [n, 1])
+    stretchedACn.apply_harmonic_function_affine()
+    stretchedACn_plus_one.apply_harmonic_function_affine()
+    listOfResistances.append(stretchedACn_plus_one.resistance_of_graph() / stretchedACn.resistance_of_graph())
 
 # placing plot points
 plt.plot(countingList, listOfResistances, "bo")
@@ -99,19 +108,20 @@ plt.plot(countingList, linearization(countingList), "r--")
 # adding text to plot
 plt.xlabel("Stretching Factor")
 plt.ylabel("Resistance of Graph")
-plt.xticks(list(range(0, rangeOfn[1] + 1)))
-plt.yticks(list(range(0, rangeOfn[1] + 1)))
+plt.xticks(nValues)
+plt.yticks(list(range(int(max(listOfResistances) + 3))))
 for r in listOfResistances:
-    plt.text(listOfResistances.index(r) + 1 - .1, r + .1, r.__round__(3))
+    plt.text(nValues[listOfResistances.index(r)], r + .1, r.__round__(3))
 
 # parts that depend on if + or x
 if kindOfGraph == '+':
-    plt.title("Resistances of the Stretched Level " + str(precarpet_level) + " " + str(Fraction(sideOfSmallSquares)) +
+    plt.title("Rho of the Stretched Level " + str(precarpet_level) + " " + str(sideOfSmallSquares.__round__(3)) +
               "-Affine Crosswire Graph")
-    plt.savefig(str(sideOfSmallSquares) + "affineCrosswireResistanceToLevel" + str(precarpet_level) + ".pdf")
+    plt.savefig("stretched" + str(sideOfSmallSquares.__round__(3)) + "AffineCrosswireResistanceToLevel" +
+                str(precarpet_level) + ".pdf")
 elif kindOfGraph == 'x':
-    plt.title("Resistances of the Stretched Level " + str(precarpet_level) + " " + str(Fraction(sideOfSmallSquares)) +
+    plt.title("Rho of the Stretched Level " + str(precarpet_level) + " " + str(sideOfSmallSquares) +
               "-Affine X Graph")
-    plt.savefig(str(sideOfSmallSquares) + "affineXResistanceToLevel" + str(precarpet_level) + ".pdf")
+    plt.savefig("stretched" + str(sideOfSmallSquares) + "AffineXResistanceToLevel" + str(precarpet_level) + ".pdf")
 
 plt.show()
