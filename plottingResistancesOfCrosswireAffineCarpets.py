@@ -6,9 +6,9 @@ from fractions import Fraction
 
 #  INPUT HERE
 # what level affine carpet would you like:
-precarpet_level = 2
+precarpet_level = 3
 # how large would you like the center hole to be:
-sideOfCenterHole = 1/2
+sideOfCenterHole = 1/3
 
 
 # the above two are the only parameters, since sideOfCenterHole + 2*sideOfSmallSquares = 1 must be true

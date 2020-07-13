@@ -82,18 +82,26 @@ class Graph:
             self.combine_vertices(dictOfDuplicatePositions[key])
 
     def apply_harmonic_function_affine(self, stretchFactor=1, numRuns=500):
+        vWithMoreThanOneN = []
+        vWithOneN = []
         for v in self.vertices:
             self.vertices[v][2] = self.vertices[v][1][0]/stretchFactor  # starts with the function f(x, y) = x/stretch
+            if not (self.vertices[v][2] == 0 or self.vertices[v][2] == 1):  # keeps from looping through boundary points
+                if not len(self.vertices[v][0]) == 1:
+                    vWithMoreThanOneN.append(v)
+                else:
+                    vWithOneN.append(v)
         for i in range(numRuns):
-            for u in self.vertices:
-                if not (self.vertices[u][2] == 0 or self.vertices[u][2] == 1):
-                    listOfWeights = []
-                    listOfWeightedHarmonicValues = []
-                    for n in self.vertices[u][0]:
-                        distanceToNeighbor = np.linalg.norm(self.vertices[u][1] - self.vertices[n][1])
-                        listOfWeights.append(1 / distanceToNeighbor)
-                        listOfWeightedHarmonicValues.append(self.vertices[n][2] / distanceToNeighbor)
-                    self.vertices[u][2] = sum(listOfWeightedHarmonicValues) / sum(listOfWeights)
+            for u in vWithMoreThanOneN:
+                listOfWeights = []
+                listOfWeightedHarmonicValues = []
+                for n in self.vertices[u][0]:
+                    if n in vWithOneN:
+                        self.vertices[n][2] = self.vertices[u][2]
+                    distanceToNeighbor = np.linalg.norm(self.vertices[u][1] - self.vertices[n][1])
+                    listOfWeights.append(1 / distanceToNeighbor)
+                    listOfWeightedHarmonicValues.append(self.vertices[n][2] / distanceToNeighbor)
+                self.vertices[u][2] = sum(listOfWeightedHarmonicValues) / sum(listOfWeights)
 
     def resistance_of_graph(self):
         totalOfSquaredDifferences = 0
