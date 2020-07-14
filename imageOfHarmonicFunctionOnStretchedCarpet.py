@@ -7,13 +7,13 @@ import numpy as np
 
 #  INPUT HERE
 # what level affine carpet would you like:
-precarpet_level = 3
+precarpet_level = 4
 # would you like a cross or X-graph (input "+" or "x"):
 kindOfGraph = "+"
 # how large would you like the center hole to be:
 sideOfCenterHole = 1/2
 # how much do you want to stretch the carpet
-stretchFactor = .01
+stretchFactor = 1/8
 
 
 # the above two are the only parameters, since sideOfCenterHole + 2*sideOfSmallSquares = 1 must be true
@@ -101,7 +101,7 @@ ax.view_init(azim=224)
 if kindOfGraph == '+':
     plt.title("Harmonic Function On Level " + str(precarpet_level) + " " + str(sideOfSmallSquares.__round__(3)) +
               "-Affine Crosswire 1x" + str(stretchFactor) + "Graph ")
-    plt.savefig(str(sideOfSmallSquares) + "affine1x" + str(stretchFactor) + "CrosswireHarmonicOnLevel" +
+    plt.savefig(str(sideOfSmallSquares.__round__(3)) + "affine1x" + str(stretchFactor) + "CrosswireHarmonicOnLevel" +
                 str(precarpet_level) + ".pdf")
 elif kindOfGraph == 'x':
     plt.title("Harmonic Function On Level " + str(precarpet_level) + " " + str(sideOfSmallSquares.__round__(3)) +

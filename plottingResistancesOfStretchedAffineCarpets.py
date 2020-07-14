@@ -9,14 +9,14 @@ precarpet_level = 4
 # would you like a cross or X-graph (input "+" or "x"):
 kindOfGraph = "+"
 # how large would you like the center hole to be:
-sideOfCenterHole = 1/2
+sideOfSmallSquares = 1/4
 # what n's would you like to analyze (where the carpets analyzed are 1xn and the distance between the boundary points
 # is n
-nValues = [2, 3, 6, 1/2]
+nValues = [1/8, 1/6, 1/4, 1/2]
 nValues.sort()
 
 # the above two are the only parameters, since sideOfCenterHole + 2*sideOfSmallSquares = 1 must be true
-sideOfSmallSquares = (1 - sideOfCenterHole) / 2
+sideOfCenterHole = 1 - sideOfSmallSquares * 2
 
 # building the level 0 carpet
 aC0 = gc.Graph()
@@ -101,9 +101,6 @@ for n in nValues:
 
 # placing plot points
 plt.plot(countingList, listOfResistances, "bo")
-coefficients = np.polyfit(countingList, listOfResistances, 1)
-linearization = np.poly1d(coefficients)
-plt.plot(countingList, linearization(countingList), "r--")
 
 # adding text to plot
 plt.xlabel("Stretching Factor")
