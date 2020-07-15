@@ -45,16 +45,6 @@ class Graph:
         for v in self.vertices:
             self.vertices[v][1] = np.multiply((self.vertices[v][1] - fixedPoint), scaleMatrix) + fixedPoint
 
-    def combine_vertices(self, listOfVerts):
-        keptPoint = listOfVerts[0]
-        listOfVerts.remove(listOfVerts[0])
-        for v in listOfVerts:
-            self.vertices[keptPoint][0].extend(self.vertices[v][0])
-            for n in self.vertices[v][0]:
-                self.vertices[n][0].remove(v)
-                self.vertices[n][0].append(keptPoint)
-            self.vertices.pop(v)
-
     def update_all_vertices_names(self, update):
         self.vertices = {key + update: value for key, value in self.vertices.items()}
         for v in self.vertices:
@@ -64,6 +54,16 @@ class Graph:
         # copies all the Vertex objects from a graph to another graph
         grCopy = copy.deepcopy(gr)
         self.vertices.update(grCopy.vertices)
+
+    def combine_vertices(self, listOfVerts):
+        keptPoint = listOfVerts[0]
+        listOfVerts.remove(listOfVerts[0])
+        for v in listOfVerts:
+            self.vertices[keptPoint][0].extend(self.vertices[v][0])
+            for n in self.vertices[v][0]:
+                self.vertices[n][0].remove(v)
+                self.vertices[n][0].append(keptPoint)
+            self.vertices.pop(v)
 
     def remove_redundancies(self):
         # combines any points with the same position
@@ -81,27 +81,29 @@ class Graph:
         for key in dictOfDuplicatePositions:
             self.combine_vertices(dictOfDuplicatePositions[key])
 
-    def apply_harmonic_function_affine(self, stretchFactor=1, numRuns=500):
-        vWithMoreThanOneN = []
-        vWithOneN = []
+    def apply_harmonic_function_affine(self, stretchFactor=1, numRuns=2000):
+        starttime = time.time()
+        vWithMoreThanOneN = set()
+        vWithOneN = set()
         for v in self.vertices:
             self.vertices[v][2] = self.vertices[v][1][0]/stretchFactor  # starts with the function f(x, y) = x/stretch
             if not (self.vertices[v][2] == 0 or self.vertices[v][2] == 1):  # keeps from looping through boundary points
                 if not len(self.vertices[v][0]) == 1:
-                    vWithMoreThanOneN.append(v)
+                    vWithMoreThanOneN.add(v)
                 else:
-                    vWithOneN.append(v)
+                    vWithOneN.add(v)
         for i in range(numRuns):
             for u in vWithMoreThanOneN:
-                listOfWeights = []
-                listOfWeightedHarmonicValues = []
+                sumOfWeights = 0
+                sumOfWeightedHarmonicValues = 0
                 for n in self.vertices[u][0]:
                     if n in vWithOneN:
                         self.vertices[n][2] = self.vertices[u][2]
                     distanceToNeighbor = np.linalg.norm(self.vertices[u][1] - self.vertices[n][1])
-                    listOfWeights.append(1 / distanceToNeighbor)
-                    listOfWeightedHarmonicValues.append(self.vertices[n][2] / distanceToNeighbor)
-                self.vertices[u][2] = sum(listOfWeightedHarmonicValues) / sum(listOfWeights)
+                    sumOfWeights += 1 / distanceToNeighbor
+                    sumOfWeightedHarmonicValues += self.vertices[n][2] / distanceToNeighbor
+                self.vertices[u][2] = sumOfWeightedHarmonicValues / sumOfWeights
+        print("Applying harmonic took", time.time() - starttime)
 
     def resistance_of_graph(self):
         totalOfSquaredDifferences = 0

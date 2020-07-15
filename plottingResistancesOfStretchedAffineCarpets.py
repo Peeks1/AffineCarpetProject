@@ -9,10 +9,10 @@ precarpet_level = 4
 # would you like a cross or X-graph (input "+" or "x"):
 kindOfGraph = "+"
 # how large would you like the center hole to be:
-sideOfSmallSquares = 1/4
+sideOfSmallSquares = 1/8
 # what n's would you like to analyze (where the carpets analyzed are 1xn and the distance between the boundary points
 # is n
-nValues = [1/8, 1/6, 1/4, 1/2]
+nValues = [1, 2, 4, 6, 8]
 nValues.sort()
 
 # the above two are the only parameters, since sideOfCenterHole + 2*sideOfSmallSquares = 1 must be true

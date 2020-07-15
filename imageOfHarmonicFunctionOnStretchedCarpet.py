@@ -13,7 +13,7 @@ kindOfGraph = "+"
 # how large would you like the center hole to be:
 sideOfCenterHole = 1/2
 # how much do you want to stretch the carpet
-stretchFactor = 1/8
+stretchFactor = 8
 
 
 # the above two are the only parameters, since sideOfCenterHole + 2*sideOfSmallSquares = 1 must be true
@@ -75,7 +75,7 @@ print("done constructing")
 # stetching and applying harmonic
 for v in aCn_plus_one.vertices:
     aCn_plus_one.vertices[v][1] = np.multiply(aCn_plus_one.vertices[v][1], [stretchFactor, 1])
-aCn_plus_one.apply_harmonic_function_affine(stretchFactor=stretchFactor)
+aCn_plus_one.apply_harmonic_function_affine(numRuns=1000, stretchFactor=stretchFactor)
 
 # plotting
 x = []

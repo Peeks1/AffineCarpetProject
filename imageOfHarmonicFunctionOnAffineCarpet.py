@@ -4,11 +4,10 @@ from mpl_toolkits.mplot3d import Axes3D
 import copy
 import graphClass as gc
 import numpy as np
-from fractions import Fraction
 
 #  INPUT HERE
 # what level affine carpet would you like:
-precarpet_level = 3
+precarpet_level = 4
 # would you like a cross or X-graph (input "+" or "x"):
 kindOfGraph = "+"
 # how large would you like the center hole to be:
@@ -87,10 +86,10 @@ ax = Axes3D(fig)
 ax.set_xlabel('x')
 ax.set_ylabel('y')
 
-cm = plt.get_cmap('plasma')
+cm = plt.get_cmap('winter')
 scalarMap = cmx.ScalarMappable(cmap=cm)
 
-ax.scatter(x, y, f, c=scalarMap.to_rgba(f))
+ax.scatter(x, y, f, c=scalarMap.to_rgba(f), s=.1, depthshade=False)
 ax.view_init(azim=224)
 
 # parts that depend on if + or x
