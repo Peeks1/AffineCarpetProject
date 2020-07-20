@@ -11,11 +11,14 @@ precarpet_level = 4
 # would you like a cross or X-graph (input "+" or "x"):
 kindOfGraph = "+"
 # how large would you like the center hole to be:
-sideOfCenterHole = 1/2
-
+sideOfSmallSquares = 1/4
+# filepath
+filePath = "harmonicData/" + str(sideOfSmallSquares.__round__(3)) + "affineCarpet/level" + str(precarpet_level - 1) + \
+           "/10000runs.txt"
+print(filePath)
 
 # the above two are the only parameters, since sideOfCenterHole + 2*sideOfSmallSquares = 1 must be true
-sideOfSmallSquares = (1 - sideOfCenterHole) / 2
+sideOfCenterHole = 1 - sideOfSmallSquares * 2
 
 # building the level 0 cross carpet
 aC0 = gc.Graph()
@@ -70,7 +73,11 @@ for k in range(precarpet_level):
     aCn_plus_one.remove_redundancies()
 print("done constructing")
 
-aCn_plus_one.apply_harmonic_function_affine()
+aCn_plus_one.apply_harmonic_function_affine(numRuns=200)
+
+for v in aCn_plus_one.vertices:
+    if aCn_plus_one.vertices[v][2] > 1:
+        print(v, aCn_plus_one.vertices[v][1], aCn_plus_one.vertices[v][2])
 
 # plotting
 x = []
@@ -89,7 +96,7 @@ ax.set_ylabel('y')
 cm = plt.get_cmap('winter')
 scalarMap = cmx.ScalarMappable(cmap=cm)
 
-ax.scatter(x, y, f, c=scalarMap.to_rgba(f), s=.1, depthshade=False)
+ax.scatter(x, y, f, c=scalarMap.to_rgba(f), s=10, depthshade=False)
 ax.view_init(azim=224)
 
 # parts that depend on if + or x

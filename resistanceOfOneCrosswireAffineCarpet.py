@@ -2,9 +2,6 @@ import numpy as np
 import graphClass as gc
 import copy
 import time
-import matplotlib.pyplot as plt
-import matplotlib.cm as cmx
-from mpl_toolkits.mplot3d import Axes3D
 
 starttime = time.time()
 #  INPUT HERE

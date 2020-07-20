@@ -1,6 +1,5 @@
 import numpy as np
 import copy
-import concurrent.futures as cf
 import time
 
 
@@ -56,6 +55,7 @@ class Graph:
         self.vertices.update(grCopy.vertices)
 
     def combine_vertices(self, listOfVerts):
+        listOfVerts.sort()
         keptPoint = listOfVerts[0]
         listOfVerts.remove(listOfVerts[0])
         for v in listOfVerts:
@@ -81,17 +81,25 @@ class Graph:
         for key in dictOfDuplicatePositions:
             self.combine_vertices(dictOfDuplicatePositions[key])
 
-    def apply_harmonic_function_affine(self, stretchFactor=1, numRuns=2000):
+    def apply_harmonic_function_affine(self, stretchFactor=1, numRuns=2000, setInitialValues=True):
         starttime = time.time()
         vWithMoreThanOneN = set()
         vWithOneN = set()
-        for v in self.vertices:
-            self.vertices[v][2] = self.vertices[v][1][0]/stretchFactor  # starts with the function f(x, y) = x/stretch
-            if not (self.vertices[v][2] == 0 or self.vertices[v][2] == 1):  # keeps from looping through boundary points
-                if not len(self.vertices[v][0]) == 1:
-                    vWithMoreThanOneN.add(v)
-                else:
-                    vWithOneN.add(v)
+        if setInitialValues:
+            for v in self.vertices:
+                self.vertices[v][2] = self.vertices[v][1][0]/stretchFactor  # starts with the function f(x, y)=x/stretch
+                if not (self.vertices[v][2] == 0 or self.vertices[v][2] == 1):  # keeps from looping through boundary
+                    if not len(self.vertices[v][0]) == 1:
+                        vWithMoreThanOneN.add(v)
+                    else:
+                        vWithOneN.add(v)
+        else:
+            for v in self.vertices:
+                if not (self.vertices[v][2] == 0 or self.vertices[v][2] == 1):  # keeps from looping through boundary
+                    if not len(self.vertices[v][0]) == 1:
+                        vWithMoreThanOneN.add(v)
+                    else:
+                        vWithOneN.add(v)
         for i in range(numRuns):
             for u in vWithMoreThanOneN:
                 sumOfWeights = 0
