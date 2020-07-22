@@ -1,23 +1,25 @@
-import matplotlib.pyplot as plt
-import matplotlib.cm as cmx
-from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
 import graphClass as gc
+import numpy as np
 import os.path as p
 
 #  INPUT HERE
-# what level affine carpet would you like:
-precarpet_level = 2
+# what level affine carpets would you like:
+precarpet_level = 4
 # how large would you like the small squares to be:
-sideOfSmallSquares = 1 / 4
+sideOfSmallSquares = 1/3
+# how many runs of relaxations on the carpet built from the data
+numRuns = 2000
 # would you like a cross or X-graph (input "+" or "x"):
-kindOfGraph = "x"
-# how many relaxations would you like
-numRuns = 200
+kindOfGraph = "+"
+# how stretched would you like the carpet to be (this will be how far the 0 boundary will be from the 1 boundary
+stretchFactor = 1
+
+# other important variable calculated from above variables
+sideOfCenterHole = 1 - sideOfSmallSquares * 2
 
 # file naming variables
 kogString = ''
-typeOfCarpet = str(sideOfSmallSquares.__round__(3)) + "affineCarpet"
+typeOfCarpet = str(sideOfSmallSquares.__round__(3)) + "affineCarpet1x" + str(stretchFactor.__round__(3))
 level = 'level' + str(precarpet_level)
 if kindOfGraph == '+':
     kogString = 'crossGraphData'
@@ -26,14 +28,23 @@ elif kindOfGraph == 'x':
 else:
     exit()
 
-# open file for reading
+# get file ready for reading data
 filePath = kogString + "/" + typeOfCarpet + "/" + level + '.txt'
 if not p.isfile(filePath):
     print('You need to generate the carpet using saveHarmonicFunction.py')
     exit()
 file = open(filePath, "r")
 
-# build carpet from data
+# get other file ready for writing data
+filePathRes = kogString + "/" + typeOfCarpet + "/" + level + 'resistance.txt'
+if p.isfile(filePathRes):
+    print('You already have data for this carpet. Press y to confirm that you would like to overwrite this data.\n')
+    keypress = input()
+    if not keypress == 'y':
+        exit()
+fileRes = open(filePathRes, "w+")
+
+# build the carpet requested
 aCn = gc.Graph()
 carpetData = file.readlines()
 del carpetData[0]
@@ -108,32 +119,10 @@ else:
         i += 1
 aCn.remove_redundancies()
 aCn.apply_harmonic_function_affine(setInitialValues=False, numRuns=numRuns)
-# build picture
-x = []
-y = []
-f = []
-for v in aCn.vertices:
-    x.append(aCn.vertices[v][1][0])
-    y.append(aCn.vertices[v][1][1])
-    f.append(aCn.vertices[v][2])
 
-fig = plt.figure()
-ax = Axes3D(fig)
-ax.set_xlabel('x')
-ax.set_ylabel('y')
+# calculate resistance
+resistance = aCn.resistance_of_graph()
 
-cm = plt.get_cmap('winter')
-scalarMap = cmx.ScalarMappable(cmap=cm)
-
-ax.scatter(x, y, f, c=scalarMap.to_rgba(f), s=10, depthshade=False)
-ax.view_init(azim=224)
-
-# parts that depend on if + or x
-if kindOfGraph == '+':
-    kogTitle = 'Crosswire'
-else:
-    kogTitle = 'X'
-plt.title("Harmonic Function On Level " + str(precarpet_level) + " " + str(sideOfSmallSquares.__round__(3)) +
-          "-Affine " + kogTitle + " Graph")
-plt.savefig(kogString + "/" + typeOfCarpet + "/" + level + ".pdf")
-plt.show()
+# write resistance to file
+fileRes.write(str(numRuns) + "runs\n")
+fileRes.write("Resistance is " + str(resistance))

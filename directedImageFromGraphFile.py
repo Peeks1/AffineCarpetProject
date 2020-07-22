@@ -1,5 +1,3 @@
-import matplotlib as mpl
-from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import matplotlib.pyplot as plt
 import os.path as p
@@ -7,13 +5,15 @@ import graphClass as gc
 
 #  INPUT HERE
 # what level affine carpet would you like:
-precarpet_level = 2
+precarpet_level = 4
 # how large would you like the small squares to be:
 sideOfSmallSquares = 1 / 4
 # how far would you like to stretch the carpet
 stretchFactor = 1
 # would you like a cross or X-graph (input "+" or "x"):
 kindOfGraph = "+"
+# how many relaxations
+numRuns = 200
 
 
 # file naming variables
@@ -108,7 +108,7 @@ else:
         aCn.add_edge(d, e)
         i += 1
 aCn.remove_redundancies()
-aCn.apply_harmonic_function_affine(setInitialValues=False, numRuns=200)
+aCn.apply_harmonic_function_affine(setInitialValues=False, numRuns=numRuns)
 aCn.print_graph()
 
 
@@ -151,6 +151,12 @@ for line in range(len(segmentlist)):
     ax.plot(x, y, z, color='b')
 
 ax.view_init(azim=224)
-plt.savefig("thefig6.png")
+if kindOfGraph == '+':
+    kogTitle = 'Crosswire'
+else:
+    kogTitle = 'X'
+plt.title("Harmonic Function On Level " + str(precarpet_level) + " " + str(sideOfSmallSquares.__round__(3)) +
+          "-Affine " + kogTitle + " Graph")
+plt.savefig(kogString + "/" + typeOfCarpet + "/" + level + "lineGraph.pdf")
 plt.show()
 

@@ -5,11 +5,11 @@ import os.path as p
 
 #  INPUT HERE
 # what level affine carpet would you like:
-precarpet_level = 3
+precarpet_level = 4
 # how large would you like the small squares to be:
-sideOfSmallSquares = 1/4
+sideOfSmallSquares = 1/3
 # how many runs
-numRuns = 100000
+numRuns = 2000
 # would you like a cross or X-graph (input "+" or "x"):
 kindOfGraph = "+"
 # how stretched would you like the carpet to be (this will be how far the 0 boundary will be from the 1 boundary
@@ -33,6 +33,11 @@ else:
 if precarpet_level < 1:
     exit()
 filePath = kogString + "/" + typeOfCarpet + "/" + level + '.txt'
+if p.isfile(filePath):
+    print('You already have data for this carpet. Press y to confirm that you would like to overwrite this data.\n')
+    keypress = input()
+    if not keypress == 'y':
+        exit()
 file = open(filePath, "w+")
 
 # 2 cases: level 1 carpet or higher than level 1 carpet
@@ -332,6 +337,10 @@ else:
                 savedParameters[0][1] = str(aCn_plus_one.vertices[v][1][1])
                 for n in aCn_plus_one.vertices[v][0]:
                     distance = aCn_plus_one.vertices[v][1] - aCn_plus_one.vertices[n][1]
+                    if np.isclose(distance[0], 0.0):
+                        distance[0] = 0.0
+                    if np.isclose(distance[1], 0.0):
+                        distance[1] = 0.0
                     if distance[0] == 0:  # must be top or bottom, as the x values were the same
                         if distance[1] < 0:  # must be top, as the neighbor has a higher y value
                             savedParameters[2][0] = str(aCn_plus_one.vertices[n][2])
@@ -515,6 +524,10 @@ else:
                 savedParameters[1][1] = abs(distance[1])
                 for n in aCn_plus_one.vertices[v][0]:
                     disN = aCn_plus_one.vertices[n][1] - aCn_plus_one.vertices[v][1]
+                    if np.isclose(disN[0], 0.0):
+                        disN[0] = 0.0
+                    if np.isclose(disN[1], 0.0):
+                        disN[1] = 0.0
                     if disN[0] < 0:  # must be on left
                         if disN[1] > 0:  # must be top left
                             savedParameters[2][0] = aCn_plus_one.vertices[n][2]
