@@ -1,14 +1,11 @@
 import matplotlib.pyplot as plt
 import os.path as p
-import copy
-import graphClass as gc
-import numpy as np
 
 #  INPUT HERE
 # what level affine carpets would you like rhos for:
-precarpet_levels = [1, 2]
+precarpet_levels = [1, 2, 3, 4]
 # how large would you like the small squares to be:
-sideOfSmallSquares = 1/4
+sideOfSmallSquares = 1/3
 # would you like a cross or X-graph (input "+" or "x"):
 kindOfGraph = "+"
 # how stretched would you like the carpet to be (this will be how far the 0 boundary will be from the 1 boundary
@@ -47,7 +44,7 @@ for i in precarpet_levels:
         if not open(filePath2, 'r') in files:
             files.append([open(filePath2, 'r'), i])
     else:
-        files.append([stretchFactor/4, 0])
+        files.append([stretchFactor * 2, 0])
 
 # get resistances from data
 resistances = []
@@ -59,8 +56,6 @@ for file in files:
         resistances.append([resistance, file[1]])
     else:
         resistances.append(file)
-
-print(resistances)
 
 # calculate rho
 rhos = []
@@ -76,10 +71,24 @@ for i in precarpet_levels:
 
 # plot
 plt.plot(precarpet_levels, [f[0] for f in rhos], "bo")
+plt.xticks(range(0, precarpet_levels[-1] + 1))
+plt.yticks(range(0, 3))
 plt.xlabel("Precarpet Level")
 plt.ylabel("Rho of Graph")
-
 for j in rhos:
     plt.text(j[1], j[0] + .05, j[0].__round__(3))
 
+# title
+stretchStr = str(stretchFactor.__round__(5))
+smallSquareStr = str(sideOfSmallSquares.__round__(3))
+plt.title("Rho of the 1x" + stretchStr + " " + smallSquareStr + "-Affine Carpet")
+
+saveFileAs = kogString + "/" + typeOfCarpet + "/" + "rhoValues.pdf"
+if p.isfile(saveFileAs):
+    print('You already have rho data. Press y if you would like to overwrite this data.')
+    keypress = input()
+    if keypress == 'y':
+        plt.savefig(saveFileAs)
+else:
+    plt.savefig(saveFileAs)
 plt.show()
