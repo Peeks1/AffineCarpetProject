@@ -7,15 +7,11 @@ import numpy as np
 
 #  INPUT HERE
 # what level affine carpet would you like:
-precarpet_level = 4
+precarpet_level = 1
 # would you like a cross or X-graph (input "+" or "x"):
-kindOfGraph = "+"
+kindOfGraph = "x"
 # how large would you like the center hole to be:
 sideOfSmallSquares = 1/4
-# filepath
-filePath = "harmonicData/" + str(sideOfSmallSquares.__round__(3)) + "affineCarpet/level" + str(precarpet_level - 1) + \
-           "/10000runs.txt"
-print(filePath)
 
 # the above two are the only parameters, since sideOfCenterHole + 2*sideOfSmallSquares = 1 must be true
 sideOfCenterHole = 1 - sideOfSmallSquares * 2

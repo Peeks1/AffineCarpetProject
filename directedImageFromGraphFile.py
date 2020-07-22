@@ -1,21 +1,24 @@
-import matplotlib.pyplot as plt
-import matplotlib.cm as cmx
+import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
-import graphClass as gc
+import matplotlib.pyplot as plt
 import os.path as p
+import graphClass as gc
 
 #  INPUT HERE
 # what level affine carpet would you like:
 precarpet_level = 2
 # how large would you like the small squares to be:
 sideOfSmallSquares = 1 / 4
+# how far would you like to stretch the carpet
+stretchFactor = 1
 # would you like a cross or X-graph (input "+" or "x"):
-kindOfGraph = "x"
+kindOfGraph = "+"
+
 
 # file naming variables
 kogString = ''
-typeOfCarpet = str(sideOfSmallSquares.__round__(3)) + "affineCarpet"
+typeOfCarpet = str(sideOfSmallSquares.__round__(3)) + "affineCarpet1x" + str(stretchFactor.__round__(3))
 level = 'level' + str(precarpet_level)
 if kindOfGraph == '+':
     kogString = 'crossGraphData'
@@ -106,32 +109,48 @@ else:
         i += 1
 aCn.remove_redundancies()
 aCn.apply_harmonic_function_affine(setInitialValues=False, numRuns=200)
-# build picture
-x = []
-y = []
-f = []
-for v in aCn.vertices:
-    x.append(aCn.vertices[v][1][0])
-    y.append(aCn.vertices[v][1][1])
-    f.append(aCn.vertices[v][2])
+aCn.print_graph()
 
+
+# Chris's code to build the graph
 fig = plt.figure()
-ax = Axes3D(fig)
-ax.set_xlabel('x')
-ax.set_ylabel('y')
+ax = fig.gca(projection='3d')
 
-cm = plt.get_cmap('winter')
-scalarMap = cmx.ScalarMappable(cmap=cm)
+thegraph = aCn
+graphlen = len(thegraph.vertices)
 
-ax.scatter(x, y, f, c=scalarMap.to_rgba(f), s=10, depthshade=False)
+p1list = []
+p2list = []
+
+for vertx in thegraph.vertices:
+    vertx = thegraph.vertices[vertx]
+    for nghbrstr in vertx[0]:
+        nghbr = thegraph.vertices[nghbrstr]
+        if nghbr[1][0] > vertx[1][0]:
+            cpoint = [vertx[1][0], vertx[1][1], vertx[2]]
+            npoint = [nghbr[1][0], nghbr[1][1], nghbr[2]]
+            p1list.append(cpoint.copy())
+            p2list.append(npoint.copy())
+        elif nghbr[1][0] == vertx[1][0] and nghbr[1][1] > vertx[1][1]:
+            cpoint = [vertx[1][0], vertx[1][1], vertx[2]]
+            npoint = [nghbr[1][0], nghbr[1][1], nghbr[2]]
+            p1list.append(cpoint.copy())
+            p2list.append(npoint.copy())
+        else:
+            pass
+
+segmentlist = []
+for i in range(len(p1list)):
+    segmentlist.append([p1list[i], p2list[i]])
+
+print("length is " + str(len(segmentlist)))
+for line in range(len(segmentlist)):
+    x = [segmentlist[line][0][0], segmentlist[line][1][0]]
+    y = [segmentlist[line][0][1], segmentlist[line][1][1]]
+    z = [segmentlist[line][0][2], segmentlist[line][1][2]]
+    ax.plot(x, y, z, color='b')
+
 ax.view_init(azim=224)
-
-# parts that depend on if + or x
-if kindOfGraph == '+':
-    kogTitle = 'Crosswire'
-else:
-    kogTitle = 'X'
-plt.title("Harmonic Function On Level " + str(precarpet_level) + " " + str(sideOfSmallSquares.__round__(3)) +
-          "-Affine " + kogTitle + " Graph")
-plt.savefig(kogString + "/" + typeOfCarpet + "/" + level + ".pdf")
+plt.savefig("thefig6.png")
 plt.show()
+
