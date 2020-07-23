@@ -81,7 +81,7 @@ class Graph:
         for key in dictOfDuplicatePositions:
             self.combine_vertices(dictOfDuplicatePositions[key])
 
-    def apply_harmonic_function_affine(self, stretchFactor=1, numRuns=2000, setInitialValues=True):
+    def apply_harmonic_function_affine(self, stretchFactor=1, numRuns=2000, setInitialValues=True, updateFrequency=50):
         starttime = time.time()
         vWithMoreThanOneN = set()
         vWithOneN = set()
@@ -101,6 +101,8 @@ class Graph:
                     else:
                         vWithOneN.add(v)
         for i in range(numRuns):
+            if i % updateFrequency == 0:
+                print("On relaxation", i, "Been applying harmonic for", time.time() - starttime)
             for u in vWithMoreThanOneN:
                 sumOfWeights = 0
                 sumOfWeightedHarmonicValues = 0

@@ -1,2 +1,2 @@
-100000runs
+10000runs
 Resistance is 2.4952830188679247

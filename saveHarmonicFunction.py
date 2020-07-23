@@ -1,19 +1,21 @@
 import numpy as np
 import graphClass as gc
 import copy
+import os
 import os.path as p
+import time
 
 #  INPUT HERE
 # what level affine carpet would you like:
 precarpet_level = 4
 # how large would you like the small squares to be:
-sideOfSmallSquares = 1/3
+sideOfSmallSquares = 1/4
 # how many runs
-numRuns = 2000
+numRuns = 5000
 # would you like a cross or X-graph (input "+" or "x"):
 kindOfGraph = "+"
 # how stretched would you like the carpet to be (this will be how far the 0 boundary will be from the 1 boundary
-stretchFactor = 1
+stretchFactor = 8
 
 # other important variable calculated from above variables
 sideOfCenterHole = 1 - sideOfSmallSquares * 2
@@ -38,8 +40,11 @@ if p.isfile(filePath):
     keypress = input()
     if not keypress == 'y':
         exit()
+if not p.isdir(kogString + '/' + typeOfCarpet):
+    os.makedirs(kogString + '/' + typeOfCarpet)
 file = open(filePath, "w+")
 
+starttime = time.time()
 # 2 cases: level 1 carpet or higher than level 1 carpet
 # if level 1 carpet, use the old system of building the carpet and then applying relaxations
 # if not, use data from the previous carpet (program will crash if it doesn't exist) to build a graph and apply
@@ -545,3 +550,5 @@ else:
                         listOfParameters.append(str(e))
                 listOfParameters[-1] = listOfParameters[-1] + '\n'
                 file.write(seperator.join(listOfParameters))
+
+print("Program took ", time.time() - starttime)

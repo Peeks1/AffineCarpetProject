@@ -4,15 +4,15 @@ import os.path as p
 
 #  INPUT HERE
 # what level affine carpets would you like:
-precarpet_level = 4
+precarpet_level = 2
 # how large would you like the small squares to be:
-sideOfSmallSquares = 1/3
+sideOfSmallSquares = 1/4
 # how many runs of relaxations on the carpet built from the data
-numRuns = 2000
+numRuns = 5000
 # would you like a cross or X-graph (input "+" or "x"):
 kindOfGraph = "+"
 # how stretched would you like the carpet to be (this will be how far the 0 boundary will be from the 1 boundary
-stretchFactor = 1
+stretchFactor = 1/2
 
 # other important variable calculated from above variables
 sideOfCenterHole = 1 - sideOfSmallSquares * 2
