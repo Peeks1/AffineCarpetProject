@@ -4,16 +4,17 @@ import os.path as p
 
 #  INPUT HERE
 # what level affine carpets would you like:
-precarpet_level = 2
+precarpet_level = 5
 # how large would you like the small squares to be:
-sideOfSmallSquares = 1/4
-# how many runs of relaxations on the carpet built from the data
-numRuns = 5000
+sideOfSmallSquares = .1
 # would you like a cross or X-graph (input "+" or "x"):
-kindOfGraph = "+"
+kindOfGraph = "x"
 # how stretched would you like the carpet to be (this will be how far the 0 boundary will be from the 1 boundary
-stretchFactor = 1/2
+stretchFactor = 1/4
 
+
+# how many runs of relaxations on the carpet built from the data (depreciated input)
+numRuns = 0
 # other important variable calculated from above variables
 sideOfCenterHole = 1 - sideOfSmallSquares * 2
 
@@ -62,7 +63,9 @@ if kindOfGraph == '+':
         bottHarmonic = parameters[5]
         leftHarmonic = parameters[6]
         rightHarmonic = parameters[7]
-        avgHarmonic = sum(parameters[4:]) / 4
+        avgHarmonic = ((parameters[4] + parameters[5]) * float(vertDisplacement[1]) + (parameters[6] + parameters[7])
+                       * float(horizontalDisplacement[0])) / (2 * (float(vertDisplacement[1]) +
+                                                                   float(horizontalDisplacement[0])))
         a = 'a' + str(i)
         b = 'b' + str(i)
         c = 'c' + str(i)
@@ -118,7 +121,8 @@ else:
         aCn.add_edge(d, e)
         i += 1
 aCn.remove_redundancies()
-aCn.apply_harmonic_function_affine(setInitialValues=False, numRuns=numRuns)
+if numRuns > 0:
+    aCn.apply_harmonic_function_affine(setInitialValues=False, numRuns=numRuns)
 
 # calculate resistance
 resistance = aCn.resistance_of_graph()
@@ -126,3 +130,4 @@ resistance = aCn.resistance_of_graph()
 # write resistance to file
 fileRes.write(str(numRuns) + "runs\n")
 fileRes.write("Resistance is " + str(resistance))
+print("Resistance is " + str(resistance))

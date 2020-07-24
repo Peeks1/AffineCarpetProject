@@ -1,0 +1,2 @@
+0runs
+Resistance is 0.3295767956438258

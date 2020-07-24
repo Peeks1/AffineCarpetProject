@@ -4,13 +4,13 @@ import os
 
 #  INPUT HERE
 # what level affine carpet would you like rhos for:
-precarpet_level = 2
+precarpet_level = 5
 # how large would you like the small squares to be:
 sideOfSmallSquares = 1 / 4
 # would you like a cross or X-graph (input "+" or "x"):
 kindOfGraph = "+"
 # what stretches would you like to compute
-stretchFactors = [1 / 2, 1, 2]
+stretchFactors = [1, 1/2, 1/4, 1/8]
 
 # other important variable calculated from above variables
 sideOfCenterHole = 1 - sideOfSmallSquares * 2
@@ -62,8 +62,8 @@ for f in files:
     rhos.append(higherResistance/lowerResistance)
 
 # plot
-plt.plot(stretchFactors, rhos, "bo")
-stretchFactors.append(stretchFactors[-1] + 1)
+plt.rcParams.update({'font.size': 15})
+plt.scatter(stretchFactors, rhos)
 plt.xticks(stretchFactors)
 plt.yticks(range(0, 3))
 plt.xlabel("Amount of Stretch")
@@ -72,9 +72,9 @@ for j in range(len(rhos)):
     plt.text(stretchFactors[j], rhos[j] + .05, rhos[j].__round__(3))
 
 # title
-levelTitle = "level " + str(precarpet_level) + " "
+levelTitle = "Level " + str(precarpet_level) + " "
 smallSquareStr = str(sideOfSmallSquares.__round__(3))
-plt.title("Rho of the " + levelTitle + smallSquareStr + "-Affine Carpet When Stretched")
+plt.title("Rho of " + levelTitle + smallSquareStr + "-Affine Cross Carpets")
 
 # save
 stretchesStr = ''

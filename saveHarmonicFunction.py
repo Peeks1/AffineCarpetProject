@@ -7,15 +7,15 @@ import time
 
 #  INPUT HERE
 # what level affine carpet would you like:
-precarpet_level = 4
+precarpet_level = 5
 # how large would you like the small squares to be:
-sideOfSmallSquares = 1/4
+sideOfSmallSquares = .1
 # how many runs
-numRuns = 5000
+numRuns = 100
 # would you like a cross or X-graph (input "+" or "x"):
-kindOfGraph = "+"
+kindOfGraph = "x"
 # how stretched would you like the carpet to be (this will be how far the 0 boundary will be from the 1 boundary
-stretchFactor = 8
+stretchFactor = 1/4
 
 # other important variable calculated from above variables
 sideOfCenterHole = 1 - sideOfSmallSquares * 2

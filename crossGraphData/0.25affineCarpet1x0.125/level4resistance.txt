@@ -1,0 +1,2 @@
+100runs
+Resistance is 3.444351551786371

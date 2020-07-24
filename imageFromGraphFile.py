@@ -7,17 +7,21 @@ import os.path as p
 
 #  INPUT HERE
 # what level affine carpet would you like:
-precarpet_level = 2
+precarpet_level = 4
 # how large would you like the small squares to be:
-sideOfSmallSquares = 1 / 4
+sideOfSmallSquares = .2
 # would you like a cross or X-graph (input "+" or "x"):
-kindOfGraph = "x"
+kindOfGraph = "+"
+# amount of stretch
+stretchFactor = 1
+
+#  DEPRECIATED INPUT
 # how many relaxations would you like
-numRuns = 200
+numRuns = 0
 
 # file naming variables
 kogString = ''
-typeOfCarpet = str(sideOfSmallSquares.__round__(3)) + "affineCarpet"
+typeOfCarpet = str(sideOfSmallSquares.__round__(3)) + "affineCarpet1x" + str(stretchFactor.__round__(3))
 level = 'level' + str(precarpet_level)
 if kindOfGraph == '+':
     kogString = 'crossGraphData'
@@ -51,7 +55,9 @@ if kindOfGraph == '+':
         bottHarmonic = parameters[5]
         leftHarmonic = parameters[6]
         rightHarmonic = parameters[7]
-        avgHarmonic = sum(parameters[4:]) / 4
+        avgHarmonic = ((parameters[4] + parameters[5]) * float(vertDisplacement[1]) + (parameters[6] + parameters[7])
+                       * float(horizontalDisplacement[0])) / (2 * (float(vertDisplacement[1]) +
+                                                                   float(horizontalDisplacement[0])))
         a = 'a' + str(i)
         b = 'b' + str(i)
         c = 'c' + str(i)
@@ -107,7 +113,8 @@ else:
         aCn.add_edge(d, e)
         i += 1
 aCn.remove_redundancies()
-aCn.apply_harmonic_function_affine(setInitialValues=False, numRuns=numRuns)
+if numRuns > 0:
+    aCn.apply_harmonic_function_affine(setInitialValues=False, numRuns=numRuns)
 # build picture
 x = []
 y = []
@@ -125,7 +132,7 @@ ax.set_ylabel('y')
 cm = plt.get_cmap('winter')
 scalarMap = cmx.ScalarMappable(cmap=cm)
 
-ax.scatter(x, y, f, c=scalarMap.to_rgba(f), s=10, depthshade=False)
+ax.scatter(x, y, f, c=scalarMap.to_rgba(f), s=.3, depthshade=False)
 ax.view_init(azim=224)
 
 # parts that depend on if + or x

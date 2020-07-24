@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d.axes3d import Axes3D
 import os.path as p
 import graphClass as gc
 
@@ -7,14 +8,15 @@ import graphClass as gc
 # what level affine carpet would you like:
 precarpet_level = 4
 # how large would you like the small squares to be:
-sideOfSmallSquares = 1 / 4
+sideOfSmallSquares = 1/3
+# would you like a cross or X-graph (input "+" or "x"):
+kindOfGraph = "x"
 # how far would you like to stretch the carpet
 stretchFactor = 1
-# would you like a cross or X-graph (input "+" or "x"):
-kindOfGraph = "+"
-# how many relaxations
-numRuns = 200
 
+
+# DEPRECIATED how many relaxations
+numRuns = 0
 
 # file naming variables
 kogString = ''
@@ -108,13 +110,13 @@ else:
         aCn.add_edge(d, e)
         i += 1
 aCn.remove_redundancies()
-aCn.apply_harmonic_function_affine(setInitialValues=False, numRuns=numRuns)
-aCn.print_graph()
+if numRuns > 0:
+    aCn.apply_harmonic_function_affine(setInitialValues=False, numRuns=numRuns)
 
 
 # Chris's code to build the graph
 fig = plt.figure()
-ax = fig.gca(projection='3d')
+ax = Axes3D(fig)
 
 thegraph = aCn
 graphlen = len(thegraph.vertices)
@@ -148,7 +150,7 @@ for line in range(len(segmentlist)):
     x = [segmentlist[line][0][0], segmentlist[line][1][0]]
     y = [segmentlist[line][0][1], segmentlist[line][1][1]]
     z = [segmentlist[line][0][2], segmentlist[line][1][2]]
-    ax.plot(x, y, z, color='b')
+    ax.plot(x, y, z, color='b', linewidth=.5)
 
 ax.view_init(azim=224)
 if kindOfGraph == '+':

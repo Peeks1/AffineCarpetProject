@@ -3,11 +3,11 @@ import os.path as p
 
 #  INPUT HERE
 # what level affine carpets would you like rhos for:
-precarpet_levels = [1, 2, 3, 4]
+precarpet_levels = [1, 2, 3, 4, 5, 6]
 # how large would you like the small squares to be:
-sideOfSmallSquares = 1/3
+sideOfSmallSquares = 1/4
 # would you like a cross or X-graph (input "+" or "x"):
-kindOfGraph = "+"
+kindOfGraph = "x"
 # how stretched would you like the carpet to be (this will be how far the 0 boundary will be from the 1 boundary
 stretchFactor = 1
 
@@ -70,6 +70,7 @@ for i in precarpet_levels:
     rhos.append([higherResistance[0]/lowerResistance, higherResistance[1]])
 
 # plot
+plt.rcParams.update({'font.size': 15})
 plt.plot(precarpet_levels, [f[0] for f in rhos], "bo")
 plt.xticks(range(0, precarpet_levels[-1] + 1))
 plt.yticks(range(0, 3))
@@ -81,7 +82,7 @@ for j in rhos:
 # title
 stretchStr = str(stretchFactor.__round__(5))
 smallSquareStr = str(sideOfSmallSquares.__round__(3))
-plt.title("Rho of the 1x" + stretchStr + " " + smallSquareStr + "-Affine Carpet")
+plt.title("Rho of the 1x" + stretchStr + " " + smallSquareStr + "-Affine X Carpet")
 
 saveFileAs = kogString + "/" + typeOfCarpet + "/" + "rhoValues.pdf"
 if p.isfile(saveFileAs):
