@@ -119,8 +119,7 @@ class Graph:
         totalOfSquaredDifferences = 0
         for v in self.vertices:
             for n in self.vertices[v][0]:
-                # distance = np.linalg.norm(self.vertices[v][1] - self.vertices[n][1])
-                distance = 1
+                distance = np.linalg.norm(self.vertices[v][1] - self.vertices[n][1])
                 totalOfSquaredDifferences += ((self.vertices[v][2] - self.vertices[n][2]) ** 2) / distance
         return 1 / (totalOfSquaredDifferences / 2)
 

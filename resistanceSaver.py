@@ -4,14 +4,16 @@ import os.path as p
 
 #  INPUT HERE
 # what level affine carpets would you like:
-precarpet_level = 5
+precarpet_level = 3
 # how large would you like the small squares to be:
-sideOfSmallSquares = .1
+sideOfSmallSquares = 1/3
 # would you like a cross or X-graph (input "+" or "x"):
-kindOfGraph = "x"
+kindOfGraph = "+"
 # how stretched would you like the carpet to be (this will be how far the 0 boundary will be from the 1 boundary
-stretchFactor = 1/4
-
+stretchFactor = 1
+# how much would you like the resistance calculation to be scaled (if you want to calculate the resistance of larger
+#   carpets, use this)
+scalingFactor = 1
 
 # how many runs of relaxations on the carpet built from the data (depreciated input)
 numRuns = 0
@@ -39,7 +41,6 @@ file = open(filePath, "r")
 # get other file ready for writing data
 filePathRes = kogString + "/" + typeOfCarpet + "/" + level + 'resistance.txt'
 if p.isfile(filePathRes):
-    print('You already have data for this carpet. Press y to confirm that you would like to overwrite this data.\n')
     keypress = input()
     if not keypress == 'y':
         exit()
@@ -128,6 +129,6 @@ if numRuns > 0:
 resistance = aCn.resistance_of_graph()
 
 # write resistance to file
-fileRes.write(str(numRuns) + "runs\n")
-fileRes.write("Resistance is " + str(resistance))
+fileRes.write("Resistance scaled by " + str(scalingFactor.__round__(3)))
+fileRes.write("Resistance is " + str(resistance) + "\n")
 print("Resistance is " + str(resistance))

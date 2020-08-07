@@ -3,11 +3,11 @@ import os.path as p
 
 #  INPUT HERE
 # what level affine carpets would you like rhos for:
-precarpet_levels = [1, 2, 3, 4, 5, 6]
+precarpet_levels = [1, 2, 3]
 # how large would you like the small squares to be:
-sideOfSmallSquares = 1/4
+sideOfSmallSquares = 1/3
 # would you like a cross or X-graph (input "+" or "x"):
-kindOfGraph = "x"
+kindOfGraph = "+"
 # how stretched would you like the carpet to be (this will be how far the 0 boundary will be from the 1 boundary
 stretchFactor = 1
 
